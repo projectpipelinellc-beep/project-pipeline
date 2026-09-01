@@ -1,0 +1,61 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-display: theme("fontFamily.display");
+  --font-sans: theme("fontFamily.sans");
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+body {
+  background-color: #fcfaf6;
+  color: #171717;
+  overflow-x: hidden;
+}
+
+* {
+  scrollbar-color: #8b1e24 #f5f0e8;
+}
+
+::selection {
+  background-color: #8b1e24;
+  color: #fcfaf6;
+}
+
+.balance {
+  text-wrap: balance;
+}
+
+/* Pipeline dashed connector line, shared by several sections */
+.pipeline-line {
+  stroke-dasharray: 6 10;
+}
+
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
