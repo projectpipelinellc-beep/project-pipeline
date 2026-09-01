@@ -107,6 +107,14 @@ export function Footer() {
                 {company.email}
               </a>
             )}
+            {company.phone && (
+              <a
+                href={`tel:${company.phone.replace(/[^\d+]/g, "")}`}
+                className="mt-2 block font-sans text-sm text-pp-cream-warm/70 transition-colors hover:text-pp-red-light"
+              >
+                {company.phone}
+              </a>
+            )}
           </div>
         </div>
 

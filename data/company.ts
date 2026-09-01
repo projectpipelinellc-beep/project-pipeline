@@ -16,8 +16,8 @@ export const company = {
 
   // Set these once real values are available. Leave null to hide from the UI
   // (footer, contact page, structured data) until configured.
-  email: "hello@projectpipeline.co" as string | null,
-  phone: null as string | null,
+  email: "projectpipelinellc@gmail.com" as string | null,
+  phone: "914-361-9631" as string | null,
 
   // Populate when a physical service area should be published. Leaving this
   // null means the site will not claim a location or service area.
