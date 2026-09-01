@@ -36,7 +36,7 @@ export const company = {
   social: {
     instagram: null as string | null,
     facebook: null as string | null,
-    linkedin: null as string | null,
+    google: null as string | null,
   },
 
   founded: "2025",

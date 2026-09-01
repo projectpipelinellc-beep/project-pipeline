@@ -1,7 +1,8 @@
 import Link from "next/link";
-import { Instagram, Facebook, Linkedin } from "lucide-react";
+import { Instagram, Facebook } from "lucide-react";
 import { Container } from "@/components/ui/Container";
 import { Logo } from "@/components/ui/Logo";
+import { GoogleIcon } from "@/components/ui/icons/GoogleIcon";
 import { company } from "@/data/company";
 import { navLinks } from "@/data/nav";
 import { services } from "@/data/services";
@@ -9,7 +10,7 @@ import { services } from "@/data/services";
 const socialIcons = [
   { key: "instagram", label: "Instagram", Icon: Instagram, href: company.social.instagram },
   { key: "facebook", label: "Facebook", Icon: Facebook, href: company.social.facebook },
-  { key: "linkedin", label: "LinkedIn", Icon: Linkedin, href: company.social.linkedin },
+  { key: "google", label: "Google", Icon: GoogleIcon, href: company.social.google },
 ] as const;
 
 export function Footer() {
