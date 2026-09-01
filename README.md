@@ -31,23 +31,50 @@ options — edit the relevant file in `/data`.
 
 The multi-step contact form posts to `app/api/contact/route.ts`, which
 validates the submission and hands it to `lib/leads.ts`. That file contains
-independent, clearly-labeled stub functions for:
+independent, clearly-labeled steps for:
 
-- Email notifications
-- CRM sync
-- Database storage
-- AI lead qualification
-- Automated SMS/email follow-up
+- **Email notifications — wired up** (see below)
+- CRM sync — stub
+- Database storage — stub
+- AI lead qualification — stub
+- Automated SMS/email follow-up — stub
 
-Fill in each function with a real integration as those services are
+Fill in each remaining stub with a real integration as those services are
 selected — the orchestration and API contract are already in place.
+
+### Contact Form Email Notifications
+
+Every submission is emailed to `company.email` (`data/company.ts`) using
+[Resend](https://resend.com), with the sender's email set as the
+Reply-To address so you can respond directly from your inbox. The email
+template lives in `lib/email.ts`.
+
+**Setup (~5 minutes):**
+
+1. Create a free account at [resend.com](https://resend.com) (100
+   emails/day, 3,000/month on the free tier — plenty for a contact form).
+2. Create an API key in the Resend dashboard.
+3. Add it as an environment variable named `RESEND_API_KEY`:
+   - Locally: copy `.env.example` to `.env.local` and paste the key in.
+   - On Vercel: Project Settings → Environment Variables → add
+     `RESEND_API_KEY` → redeploy.
+4. That's it — submissions will start emailing `company.email`. Leads are
+   sent from Resend's shared `onboarding@resend.dev` address until you
+   verify your own sending domain in Resend, at which point set the
+   optional `EMAIL_FROM` environment variable (e.g.
+   `Project Pipeline <leads@projectpipeline.co>`) to send from it instead.
+
+If `RESEND_API_KEY` isn't set, the form still validates and submits
+successfully — the email step is skipped with a warning in the server
+logs, so nothing breaks in local development or before setup is complete.
 
 ## Deployment (Vercel)
 
 1. Push this repository to GitHub.
 2. Import the repository in [Vercel](https://vercel.com/new).
-3. No environment variables are required for the base site. Add any once
-   the integrations in `lib/leads.ts` are implemented.
+3. Add the `RESEND_API_KEY` environment variable (see above) so contact
+   form submissions email you. Add others once the remaining integrations
+   in `lib/leads.ts` are implemented.
 4. Set `company.url` in `data/company.ts` to the production domain before
    launch so canonical URLs, sitemap, and Open Graph metadata are correct.
 

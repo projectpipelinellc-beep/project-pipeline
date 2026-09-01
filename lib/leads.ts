@@ -1,3 +1,6 @@
+import { Resend } from "resend";
+import { company } from "@/data/company";
+import { renderLeadEmail } from "./email";
 import type { ContactFormData } from "./contact";
 
 export type Lead = ContactFormData & {
@@ -14,12 +17,44 @@ export type Lead = ContactFormData & {
  * each step in order and tolerates individual steps being no-ops.
  */
 
-/** Send an internal notification email to the business owner/team. */
+/**
+ * Send an internal notification email to the business owner via Resend
+ * (https://resend.com). Requires a RESEND_API_KEY environment variable —
+ * see README.md for setup. Silently skips (with a log) if unconfigured so
+ * local development and other environments don't need it to run.
+ */
 async function notifyByEmail(lead: Lead): Promise<void> {
-  // TODO: integrate with an email provider (Resend, Postmark, SendGrid, etc.)
-  // using an API key stored in an environment variable, e.g. RESEND_API_KEY.
-  if (process.env.NODE_ENV !== "production") {
-    console.log("[leads] notifyByEmail (stub):", lead.email);
+  const apiKey = process.env.RESEND_API_KEY;
+
+  if (!apiKey) {
+    console.warn("[leads] notifyByEmail skipped — RESEND_API_KEY is not set.");
+    return;
+  }
+
+  if (!company.email) {
+    console.warn("[leads] notifyByEmail skipped — data/company.ts has no email configured.");
+    return;
+  }
+
+  const resend = new Resend(apiKey);
+  const { subject, html, text } = renderLeadEmail(lead);
+
+  // EMAIL_FROM lets a verified sending domain be used once one is set up in
+  // Resend (e.g. "Project Pipeline <leads@projectpipeline.co>"). Until then,
+  // Resend's shared onboarding domain works out of the box.
+  const from = process.env.EMAIL_FROM || "Project Pipeline <onboarding@resend.dev>";
+
+  const { error } = await resend.emails.send({
+    from,
+    to: company.email,
+    replyTo: lead.email || undefined,
+    subject,
+    html,
+    text,
+  });
+
+  if (error) {
+    throw new Error(`Resend error: ${error.message}`);
   }
 }
 
